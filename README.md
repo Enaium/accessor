@@ -2,6 +2,20 @@
 
 Invoke private field and method
 
+## Install
+
+### [Enaium Maven](https://maven.enaium.cn)
+
+[![Maven URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Fmaven.enaium.cn%2Fcn%2Fenaium%2Faccessor%2Fmaven-metadata.xml&style=flat-square)](https://maven.enaium.cn)
+
+### [JitPack](https://jitpack.io/#Enaium/accessor)
+
+[![JitPack](https://img.shields.io/jitpack/v/github/Enaium/accessor?style=flat-square)](https://jitpack.io/#Enaium/accessor)
+
+### [Releases](https://github.com/cf4m/cf4m/releases)
+
+[![Releases](https://img.shields.io/github/v/release/Enaium/accessor?style=flat-square)](https://github.com/Enaium/accessor/releases)
+
 ## Usage
 
 ```java
