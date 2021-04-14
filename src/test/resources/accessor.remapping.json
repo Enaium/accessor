@@ -1,0 +1,5 @@
+{
+  "Test": "cn.enaium.accessor.Test",
+  "rename": "name",
+  "display": "render"
+}

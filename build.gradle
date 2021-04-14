@@ -1,0 +1,33 @@
+plugins {
+    id 'java'
+    id 'maven'
+}
+
+group 'cn.enaium'
+version '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation('org.ow2.asm:asm-tree:9.1')
+    implementation('commons-io:commons-io:2.4')
+    implementation('com.google.code.gson:gson:2.2.4')
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = "sources"
+    from sourceSets.main.allSource
+}
+
+uploadArchives {
+    repositories.mavenDeployer {
+        def MAVEN_URL = System.getenv('MAVEN_URL')
+        if (MAVEN_URL != null) {
+            repository(url: "file://${new File(MAVEN_URL)}")
+        }
+    }
+}
+
+artifacts { archives sourcesJar }

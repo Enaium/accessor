@@ -1,0 +1,6 @@
+{
+  "accessors": [
+    "cn.enaium.accessor.ITest"
+  ],
+  "remapping": "accessor.remapping.json"
+}
