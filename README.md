@@ -58,7 +58,9 @@ public class Test {
 public static void main(String[] args) {
 
     //Add configuration
-    Accessor.addConfiguration(Main.class, "accessor.config.json");
+    Accessor.addConfiguration("accessor.config.json");
+    //Accessor.addConfiguration(Main.class, "accessor.config.json");
+    //Accessor.addConfiguration(Main.class.getClassLoader(), "accessor.config.json");
 
     //Transform
     Accessor.transform(basic);
