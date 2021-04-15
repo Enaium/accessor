@@ -1,6 +1,7 @@
 plugins {
     id 'java'
-    id 'maven'
+    id 'maven-publish'
+    id 'signing'
 }
 
 group 'cn.enaium'
@@ -16,18 +17,68 @@ dependencies {
     implementation('com.google.code.gson:gson:2.2.4')
 }
 
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = "sources"
-    from sourceSets.main.allSource
+java {
+    withJavadocJar()
+    withSourcesJar()
 }
 
-uploadArchives {
-    repositories.mavenDeployer {
-        def MAVEN_URL = System.getenv('MAVEN_URL')
-        if (MAVEN_URL != null) {
-            repository(url: "file://${new File(MAVEN_URL)}")
+publishing {
+    repositories {
+        def ENV = System.getenv()
+        if (ENV.MAVEN_URL) {
+            maven {
+                url ENV.MAVEN_URL
+            }
+        }
+
+        maven {
+            url "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+            credentials {
+                username ossrhUsername
+                password ossrhPassword
+            }
+        }
+    }
+
+    publications {
+
+        mavenJava(MavenPublication) {
+            groupId project.group
+            artifactId project.name
+            version project.version
+
+            from components.java
+
+            pom {
+                name = 'accessor'
+                description = 'Bytecode framework for java, Invoke private field and method'
+                url = 'https://github.com/Enaium/accessor/'
+
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = 'enaium'
+                        name = 'Enaium'
+                        email = 'Enaium@outlook.com'
+                    }
+                }
+
+                scm {
+                    connection = 'scm:git:https://github.com/Enaium/accessor.git'
+                    developerConnection = 'scm:git:https://github.com/Enaium/accessor.git'
+                    url = 'https://github.com/Enaium/accessor/'
+                }
+            }
         }
     }
 }
 
-artifacts { archives sourcesJar }
+signing {
+    sign publishing.publications.mavenJava
+}
