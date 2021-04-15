@@ -12,10 +12,6 @@ Invoke private field and method
 
 [![JitPack](https://img.shields.io/jitpack/v/github/Enaium/accessor?style=flat-square)](https://jitpack.io/#Enaium/accessor)
 
-### [Releases](https://github.com/cf4m/cf4m/releases)
-
-[![Releases](https://img.shields.io/github/v/release/Enaium/accessor?style=flat-square)](https://github.com/Enaium/accessor/releases)
-
 ## Usage
 
 ```java
