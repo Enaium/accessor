@@ -20,18 +20,25 @@ public class Accessor {
     private static final ArrayList<ClassNode> classNodes = new ArrayList<>();
     private static final HashMap<String, String> mapping = new HashMap<>();
 
+    public static void addConfiguration(String name) {
+        addConfiguration(Thread.currentThread().getContextClassLoader(), name);
+    }
+
     public static void addConfiguration(Class<?> klass, String name) {
+        addConfiguration(klass.getClassLoader(), name);
+    }
+
+    public static void addConfiguration(ClassLoader classLoader, String name) {
         try {
-            ClassLoader cl = klass.getClassLoader();
-            Configuration configuration = new Gson().fromJson(IOUtils.toString(Objects.requireNonNull(klass.getClassLoader().getResourceAsStream(name))), Configuration.class);
+            Configuration configuration = new Gson().fromJson(IOUtils.toString(Objects.requireNonNull(classLoader.getResourceAsStream(name))), Configuration.class);
             for (String accessor : configuration.accessors) {
-                ClassReader classReader = new ClassReader(IOUtils.toByteArray(Objects.requireNonNull(cl.getResourceAsStream(accessor.replace(".", "/") + ".class"))));
+                ClassReader classReader = new ClassReader(IOUtils.toByteArray(Objects.requireNonNull(classLoader.getResourceAsStream(accessor.replace(".", "/") + ".class"))));
                 ClassNode classNode = new ClassNode();
                 classReader.accept(classNode, 0);
                 classNodes.add(classNode);
             }
             if (configuration.remapping != null) {
-                mapping.putAll(new Gson().fromJson(IOUtils.toString(Objects.requireNonNull(cl.getResourceAsStream(configuration.remapping))), new TypeToken<HashMap<String, String>>() {
+                mapping.putAll(new Gson().fromJson(IOUtils.toString(Objects.requireNonNull(classLoader.getResourceAsStream(configuration.remapping))), new TypeToken<HashMap<String, String>>() {
                 }.getType()));
             }
         } catch (IOException e) {
@@ -153,6 +160,4 @@ public class Accessor {
 
         return null;
     }
-
-
 }

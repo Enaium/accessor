@@ -10,7 +10,7 @@ import java.nio.file.Files;
 public class Main {
     public static void main(String[] args) throws IOException {
 
-        Accessor.addConfiguration(Main.class, "accessor.config.json");
+        Accessor.addConfiguration("accessor.config.json");
 
         File Test = new File("build/classes/java/test/cn/enaium/accessor/Test.class").getAbsoluteFile();
         Files.write(Test.toPath(), Accessor.transform(Files.readAllBytes(Test.toPath())));
