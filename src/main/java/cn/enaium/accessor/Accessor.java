@@ -1,5 +1,6 @@
 package cn.enaium.accessor;
 
+import cn.enaium.accessor.util.ASMUtil;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.apache.commons.io.IOUtils;
@@ -104,9 +105,9 @@ public class Accessor {
                         }
                         if (!method.desc.endsWith(")V")) {
                             methodNode.instructions.add(new FieldInsnNode(fieldStatic ? GETSTATIC : GETFIELD, classNode.name, fieldName, method.desc.substring(method.desc.lastIndexOf(")") + 1)));
-                            methodNode.instructions.add(new InsnNode(ARETURN));
+                            methodNode.instructions.add(new InsnNode(ASMUtil.getReturnOpcode(method.desc.substring(method.desc.lastIndexOf(")") + 1))));
                         } else {
-                            methodNode.instructions.add(new VarInsnNode(ALOAD, 1));
+                            methodNode.instructions.add(new VarInsnNode(ASMUtil.getLoadOpcode(methodNode.desc.substring(methodNode.desc.indexOf("(") + 1, methodNode.desc.lastIndexOf(")V"))), 1));
                             methodNode.instructions.add(new FieldInsnNode(fieldStatic ? PUTSTATIC : PUTFIELD, classNode.name, fieldName, method.desc.substring(method.desc.indexOf("(") + 1, method.desc.lastIndexOf(")"))));
                             methodNode.instructions.add(new InsnNode(RETURN));
                         }
@@ -124,11 +125,16 @@ public class Accessor {
                             methodNode.instructions.add(new VarInsnNode(ALOAD, 0));
                         }
 
-                        for (int i = 0; i < Type.getMethodType(method.desc).getArgumentTypes().length; i++) {
-                            methodNode.instructions.add(new VarInsnNode(ALOAD, i + 1));
+                        Type[] argumentTypes = Type.getMethodType(method.desc).getArgumentTypes();
+                        for (int i = 0; i < argumentTypes.length; i++) {
+                            Type argumentType = argumentTypes[i];
+                            methodNode.instructions.add(new VarInsnNode(ASMUtil.getLoadOpcode(argumentType.getDescriptor()), i + 1));
                         }
 
+                        //Invoke method
                         methodNode.instructions.add(new MethodInsnNode(methodStatic ? INVOKESTATIC : INVOKESPECIAL, classNode.name, methodName, method.desc));
+
+                        //End
                         methodNode.instructions.add(new InsnNode(RETURN));
                         classNode.methods.add(methodNode);
                     }
