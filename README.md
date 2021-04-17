@@ -19,7 +19,7 @@ Invoke private field and method
 ## Usage
 
 ```java
-@Accessor("cn.enaium.accessor.Test")
+@Accessor(Test.class)
 public interface ITest {
     @Field("name")
     String getName();
@@ -75,7 +75,7 @@ public static void main(String[] args) {
 ### Remapping
 
 ```java
-@Accessor("Test")
+@Accessor(Test.class)
 public interface ITest {
     @Field("rename")
     String getName();
@@ -90,9 +90,10 @@ public interface ITest {
 
 ```json
 {
-  "Test": "cn.enaium.accessor.Test",
-  "rename": "name",
-  "display": "render"
+  "cn/enaium/accessor/ITest": {
+    "rename": "name",
+    "display": "render"
+  }
 }
 ```
 
