@@ -7,7 +7,7 @@ import cn.enaium.accessor.annotaiton.Method;
 /**
  * @author Enaium
  */
-@Accessor("Test")
+@Accessor(Test.class)
 public interface ITest {
     @Field("rename")
     String getName();

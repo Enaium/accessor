@@ -11,5 +11,17 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.CLASS)
 public @interface Accessor {
-    String value();
+    /**
+     * @return target class
+     *
+     * such as <b>Target.class</b>
+     */
+    Class<?> value() default Accessor.class;
+
+    /**
+     * @return target class name
+     * <p>
+     * such as <b>cn.enaium.inject.Target</b>
+     */
+    String target() default "";
 }

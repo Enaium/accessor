@@ -1,5 +1,6 @@
 {
-  "Test": "cn.enaium.accessor.Test",
-  "rename": "name",
-  "display": "render"
+  "cn/enaium/accessor/ITest": {
+    "rename": "name",
+    "display": "render"
+  }
 }

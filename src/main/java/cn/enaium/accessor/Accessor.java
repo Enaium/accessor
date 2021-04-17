@@ -19,7 +19,7 @@ import static org.objectweb.asm.Opcodes.*;
  */
 public class Accessor {
     private static final ArrayList<ClassNode> classNodes = new ArrayList<>();
-    private static final HashMap<String, String> mapping = new HashMap<>();
+    private static final HashMap<String, HashMap<String, String>> mapping = new HashMap<>();
 
     public static void addConfiguration(String name) {
         addConfiguration(Thread.currentThread().getContextClassLoader(), name);
@@ -39,7 +39,7 @@ public class Accessor {
                 classNodes.add(classNode);
             }
             if (configuration.remapping != null) {
-                mapping.putAll(new Gson().fromJson(IOUtils.toString(Objects.requireNonNull(classLoader.getResourceAsStream(configuration.remapping))), new TypeToken<HashMap<String, String>>() {
+                mapping.putAll(new Gson().fromJson(IOUtils.toString(Objects.requireNonNull(classLoader.getResourceAsStream(configuration.remapping))), new TypeToken<HashMap<String, HashMap<String, String>>>() {
                 }.getType()));
             }
         } catch (IOException e) {
@@ -58,13 +58,28 @@ public class Accessor {
         classReader.accept(classNode, 0);
 
         for (ClassNode node : classNodes) {
+            final HashMap<String, String> remapping = new HashMap<>();
+
+            if (mapping.containsKey(node.name)) {
+                remapping.putAll(mapping.get(node.name));
+            }
+
             String className = null;
             for (AnnotationNode invisibleAnnotation : node.invisibleAnnotations) {
-                className = getAnnotationValue(invisibleAnnotation, "value");
+                Type value = getAnnotationValue(invisibleAnnotation, "value");
+                if (value != null && !value.getDescriptor().equals(Type.getDescriptor(cn.enaium.accessor.annotaiton.Accessor.class))) {
+                    className = value.getClassName();
+                    continue;
+                }
+
+                String target = getAnnotationValue(invisibleAnnotation, "target");
+                if (target != null && !target.equals("")) {
+                    className = target;
+                }
             }
 
             if (className != null) {
-                className = mapping.getOrDefault(className, className).replace(".", "/");
+                className = remapping.getOrDefault(className, className).replace(".", "/");
 
 
                 if (className.equals(classNode.name)) {
@@ -98,7 +113,7 @@ public class Accessor {
                     }
 
                     if (fieldName != null) {
-                        fieldName = mapping.getOrDefault(fieldName, fieldName);
+                        fieldName = remapping.getOrDefault(fieldName, fieldName);
                         MethodNode methodNode = new MethodNode(ASM9, ACC_PUBLIC, method.name, method.desc, null, null);
                         if (!fieldStatic) {
                             methodNode.instructions.add(new VarInsnNode(ALOAD, 0));
@@ -115,7 +130,7 @@ public class Accessor {
                     }
 
                     if (methodName != null) {
-                        methodName = mapping.getOrDefault(methodName, methodName);
+                        methodName = remapping.getOrDefault(methodName, methodName);
                         if (method.name.equals(methodName)) {
                             throw new RuntimeException("[" + node.name + ", " + methodName + "]" + "method name repeat!");
                         }

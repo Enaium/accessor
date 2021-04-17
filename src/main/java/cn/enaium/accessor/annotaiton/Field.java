@@ -11,7 +11,13 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.CLASS)
 public @interface Field {
+    /**
+     * @return field name
+     */
     String value();
 
+    /**
+     * @return not static
+     */
     boolean dynamic() default true;
 }
