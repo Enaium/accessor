@@ -6,15 +6,11 @@ Invoke private field and method
 
 ### [Maven](https://repo1.maven.org/maven2/cn/enaium/accessor/)
 
-[![Maven Central](https://img.shields.io/maven-central/v/cn.enaium/accessor?style=flat-square)](https://repo1.maven.org/maven2/cn/enaium/accessor/)
+[![Maven Central](https://img.shields.io/maven-central/v/cn.enaium/accessor?style=flat-square)](https://search.maven.org/artifact/cn.enaium/accessor)
 
 ### [Enaium Maven](https://maven.enaium.cn)
 
 [![Maven URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Fmaven.enaium.cn%2Fcn%2Fenaium%2Faccessor%2Fmaven-metadata.xml&style=flat-square)](https://maven.enaium.cn)
-
-### [JitPack](https://jitpack.io/#Enaium/accessor)
-
-[![JitPack](https://img.shields.io/jitpack/v/github/Enaium/accessor?style=flat-square)](https://jitpack.io/#Enaium/accessor)
 
 ## Usage
 
