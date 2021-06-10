@@ -9,12 +9,22 @@ import cn.enaium.accessor.annotaiton.Method;
  */
 @Accessor(Test.class)
 public interface ITest {
-    @Field("rename")
+    @Field("name")
     String getName();
 
-    @Field("rename")
+    @Field("name")
     void setName(String name);
 
-    @Method("display")
+
+    @Field("id")
+    void setID(String id);
+
+    @Field("id")
+    String getID();
+
+    @Method("render")
     void InvokeRender(String arg);
+
+    @Method("render")
+    void InvokeRender(String[] strings);
 }
