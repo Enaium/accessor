@@ -18,6 +18,8 @@ import static org.objectweb.asm.Opcodes.*;
  * @author Enaium
  */
 public class Accessor {
+
+    private static final AccessorClassLoader acl = new AccessorClassLoader();
     private static final ArrayList<ClassNode> classNodes = new ArrayList<>();
     private static final HashMap<String, HashMap<String, String>> mapping = new HashMap<>();
 
@@ -50,6 +52,34 @@ public class Accessor {
     private static class Configuration {
         String[] accessors;
         String remapping;
+    }
+
+    public static <T> T create(Class<?> klass, Class<T> inter) {
+        try {
+            ClassReader classReader = new ClassReader(inter.getName());
+            ClassNode classNode = new ClassNode();
+            classReader.accept(classNode, 0);
+            classNodes.add(classNode);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return create(klass);
+    }
+
+    public static <T> T create(Class<?> klass) {
+        T instance = null;
+        try {
+            ClassReader classReader = new ClassReader(klass.getName());
+            ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+            classReader.accept(classWriter, 0);
+
+            acl.list.put(klass.getName(), transform(classWriter.toByteArray()));
+            Class<?> aClass = acl.loadClass(klass.getName());
+            instance = (T) aClass.newInstance();
+        } catch (IOException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return instance;
     }
 
     public static byte[] transform(byte[] basic) {
