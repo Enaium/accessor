@@ -15,6 +15,7 @@ Invoke private field and method
 ## Usage
 
 ```java
+
 @Accessor(Test.class)
 public interface ITest {
     @Field("name")
@@ -51,7 +52,7 @@ public class Test {
 ```
 
 ```java
-public static void main(String[] args) {
+public static void main(String[]args){
 
     //Add configuration
     Accessor.addConfiguration("accessor.config.json");
@@ -60,11 +61,22 @@ public static void main(String[] args) {
 
     //Transform
     Accessor.transform(basic);
-    
-    Test test = new Test();
-    ((ITest) test).setName("Name");
-    System.out.println(((ITest) test).getName());
-    ((ITest) test).InvokeRender("render");
+
+    Test test=new Test();
+    ((ITest)test).setName("Name");
+    System.out.println(((ITest)test).getName());
+    ((ITest)test).InvokeRender("render");
+}
+```
+
+or
+
+```java
+public static void main(String[]args){
+        ITest iTest = Accessor.create(Test.class, ITest.class);
+    iTest.setName("Name");
+    System.out.println(((ITest)test).getName());
+    iTest.InvokeRender("render");
 }
 ```
 
